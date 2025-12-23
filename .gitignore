@@ -1,0 +1,13 @@
+*-lock.json
+*.DS_Store
+
+zsh/.config/zsh/local/*
+!zsh/.config/zsh/local/
+!zsh/.config/zsh/local/.keep
+
+tmux/.config/tmux/local/*
+!zsh/.config/tmux/local/
+!zsh/.config/tmux/local/.keep
+
+.DS_Store
+**/.DS_Store

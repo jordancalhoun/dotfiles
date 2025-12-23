@@ -1,0 +1,22 @@
+# Define anything that needs to happen before we source
+# This is where the profile should be defined if anything other than personal
+# export ZSH_PROFILE=work, for example
+if [[ -d "$HOME/.config/zsh-local/pre" ]]; then
+  for f in "$HOME/.config/zsh-local/pre/"*.zsh(N); do
+    source "$f"
+  done
+fi
+
+# Shared configuration
+if [[ -d "$HOME/.config/zsh/conf.d" ]]; then
+  for f in "$HOME/.config/zsh/conf.d/"*.zsh(N); do
+    source "$f"
+  done
+fi
+
+# Local post files (overrides, secrets, etc)
+if [[ -d "$HOME/.config/zsh-local/post" ]]; then
+  for f in "$HOME/.config/zsh-local/post/"*.zsh(N); do
+    source "$f"
+  done
+fi
