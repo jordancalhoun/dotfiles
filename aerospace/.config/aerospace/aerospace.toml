@@ -93,7 +93,7 @@ if.app-id = 'com.apple.IconComposer'
 run = "move-node-to-workspace D"
 
 [[on-window-detected]]
-if.app-id = 'com.figma.desktop'
+if.app-id = 'com.figma.Desktop'
 run = "move-node-to-workspace D"
 
 ######################
