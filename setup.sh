@@ -16,8 +16,8 @@ OPTIONAL_PACKAGES=(
 )
 
 DIRECTORIES=(
-  "$HOME/.config/tmux/local"
-  "$HOME/.config/zsh-local/post"
+  # "$HOME/.config/tmux/local"
+  # "$HOME/.config/zsh-local/post"
 )
 
 # Zsh loader block appended to ~/.zshrc (only once)
