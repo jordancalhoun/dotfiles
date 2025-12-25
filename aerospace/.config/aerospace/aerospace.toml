@@ -40,6 +40,10 @@ run = "move-node-to-workspace B"
 if.app-id = 'com.google.Chrome'
 run = "move-node-to-workspace B"
 
+[[on-window-detected]]
+if.app-id = 'net.imput.helium'
+run = "move-node-to-workspace B"
+
 ######################
 # Productivity
 ######################
