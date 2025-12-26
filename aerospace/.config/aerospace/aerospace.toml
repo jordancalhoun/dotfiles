@@ -104,6 +104,10 @@ run = "move-node-to-workspace D"
 if.app-id = 'com.figma.Desktop'
 run = "move-node-to-workspace D"
 
+[[on-window-detected]]
+if.app-id = 'com.pixelmatorteam.pixelmator.touch.x.photo'
+run = "move-node-to-workspace D"
+
 ######################
 # Agents
 ######################
