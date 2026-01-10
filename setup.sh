@@ -15,11 +15,6 @@ OPTIONAL_PACKAGES=(
   nvim12
 )
 
-DIRECTORIES=(
-  # "$HOME/.config/tmux/local"
-  # "$HOME/.config/zsh-local/post"
-)
-
 # Zsh loader block appended to ~/.zshrc (only once)
 ZSHRC_LOADER_START="# >>> zsh config managed by stow >>>"
 ZSHRC_LOADER_END="# <<< zsh config managed by stow <<<"
@@ -284,9 +279,6 @@ fi
 
 # 4) Ensure ~/.config exists (many packages target it)
 mkdir -p "$HOME/.config"
-
-# Create the local direcotires if they don't exist
-create_directories
 
 # 5) Append zsh loader once (so ~/.zshrc loads ~/.config/zsh/zshrc)
 append_zshrc_loader_once

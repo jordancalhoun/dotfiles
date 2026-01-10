@@ -169,6 +169,10 @@ if.app-id = 'com.apple.Xcode'
 run = "move-node-to-workspace X"
 
 [[on-window-detected]]
+if.app-id = 'com.xcodesorg.xcodesapp'
+run = "move-node-to-workspace X"
+
+[[on-window-detected]]
 if.app-id = 'com.todesktop.202313mzl4w4u92'
 run = "move-node-to-workspace E"
 
