@@ -85,6 +85,9 @@ run = "move-node-to-workspace F"
 if.app-id = 'com.spotify.client'
 run = "move-node-to-workspace M"
 
+[[on-window-detected]]
+if.app-id = 'com.roon.Roon'
+run = "move-node-to-workspace M"
 ######################
 # Design Work
 ######################
