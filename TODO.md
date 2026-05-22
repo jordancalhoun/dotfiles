@@ -1,0 +1,2 @@
+- [ ] Ghostty config doesn't get sourced from .config
+- [ ] Install script doesn't source homebrew after it's installed
