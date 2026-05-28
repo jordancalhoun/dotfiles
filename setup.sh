@@ -8,6 +8,7 @@ BASE_PACKAGES=(
   nvim
   starship
   tmux
+  xcode
   zsh
 )
 
@@ -205,10 +206,12 @@ stow_conflict_paths_from_output() {
   # Stow typically prints lines like:
   #   * existing target is neither a link nor a directory: .config/nvim
   #   * existing target is a directory: .zshrc
+  #   * cannot stow ... over existing target Library/.../Vague.xccolortheme since ...
   #
-  # We grab whatever comes after the final ": " on those bullet lines.
-  grep -E '^\s*\*\s+existing target .*: ' |
-    sed -E 's/^.*: //'
+  # We grab the target path from both known conflict formats.
+  sed -nE \
+    -e 's/^[[:space:]]*\*[[:space:]]+existing target .*: (.*)$/\1/p' \
+    -e 's/^[[:space:]]*\*[[:space:]]+cannot stow .* over existing target ([^ ]+) since .*$/\1/p'
 }
 
 stow_restow_with_backups_on_conflict() {
