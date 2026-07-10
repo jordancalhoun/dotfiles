@@ -130,3 +130,39 @@ Or trace loads:
 echo "loading: $f"
 ```
 
+# Fish Configuration Layout
+
+Fish is configured in parallel with zsh so either shell can be used while migrating.
+
+```
+~/.config/fish/config.fish
+ ├── ~/.config/fish-local/pre/*.fish
+ ├── ~/.config/fish/conf.d/*.fish
+ ├── ~/.config/fish/profiles/$DOTFILES_PROFILE/*.fish
+ ├── ~/.config/fish/local/profile.fish
+ ├── ~/.config/fish/local/secrets.fish
+ └── ~/.config/fish-local/post/*.fish
+```
+
+Set the active profile from a local pre file:
+
+```fish
+set -gx DOTFILES_PROFILE work
+```
+
+Fish migration notes:
+
+- zsh syntax cannot be sourced from fish. Port local `*.zsh` files to `*.fish`.
+- Use `set -gx NAME value` instead of `export NAME=value`.
+- Use `fish_add_path` or the provided `path_add` helper instead of editing `PATH` directly.
+- Use `starship init fish | source`, `rbenv init - fish | source`, and `pyenv init - fish | source`.
+- Fish owns completions, history, and autosuggestions; zinit, compinit, zstyle, bindkey, and zsh plugins are intentionally not loaded.
+
+After testing `fish`, make it a login shell:
+
+```bash
+grep -qxF /opt/homebrew/bin/fish /etc/shells || echo /opt/homebrew/bin/fish | sudo tee -a /etc/shells
+chsh -s /opt/homebrew/bin/fish
+```
+
+Alternatively, keep the login shell as zsh and configure Ghostty to launch `/opt/homebrew/bin/fish`.

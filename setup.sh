@@ -4,6 +4,7 @@ set -euo pipefail
 # --------- config ---------
 BASE_PACKAGES=(
   aerospace
+  fish
   ghostty
   nvim
   starship
@@ -283,7 +284,8 @@ fi
 # 4) Ensure ~/.config exists (many packages target it)
 mkdir -p "$HOME/.config"
 
-# 5) Append zsh loader once (so ~/.zshrc loads ~/.config/zsh/zshrc)
+# 5) Append zsh loader once (so ~/.zshrc loads ~/.config/zsh/zshrc).
+# Fish uses ~/.config/fish/config.fish directly through the stowed fish package.
 append_zshrc_loader_once
 
 # 6) Build package list (optionally include OPTIONAL_PACKAGES)

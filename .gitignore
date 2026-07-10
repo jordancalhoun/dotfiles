@@ -5,6 +5,10 @@ zsh/.config/zsh/local/*
 !zsh/.config/zsh/local/
 !zsh/.config/zsh/local/.keep
 
+fish/.config/fish/local/*
+!fish/.config/fish/local/
+!fish/.config/fish/local/.keep
+
 tmux/.config/tmux/local/*
 !zsh/.config/tmux/local/
 !zsh/.config/tmux/local/.keep

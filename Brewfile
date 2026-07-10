@@ -1,4 +1,5 @@
 brew "ast-grep"
+brew "fish"
 brew "fzf"
 brew "gh"
 brew "lazygit"
