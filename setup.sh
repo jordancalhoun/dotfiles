@@ -254,6 +254,30 @@ stow_restow_with_backups_on_conflict() {
   stow -R -v -d "$REPO_DIR" -t "$HOME" "$pkg"
 }
 
+set_default_shell_fish() {
+  local fish_bin="/opt/homebrew/bin/fish"
+
+  if ! [[ -x "$fish_bin" ]]; then
+    warn "fish not found at $fish_bin; skipping default-shell setup."
+    warn "Run 'brew install fish' or adjust \$fish_bin and rerun."
+    return 0
+  fi
+
+  # Add to /etc/shells if missing (requires sudo)
+  if ! grep -qxF "$fish_bin" /etc/shells; then
+    log "Adding $fish_bin to /etc/shells (requires sudo)"
+    printf '%s\n' "$fish_bin" | sudo tee -a /etc/shells >/dev/null
+  fi
+
+  # Change login shell if it isn't fish already
+  if [[ "$SHELL" != "$fish_bin" ]]; then
+    log "Setting login shell to fish (may prompt for password)"
+    chsh -s "$fish_bin"
+  else
+    log "Login shell is already fish"
+  fi
+}
+
 # --------- main ---------
 log "Repo: $REPO_DIR"
 
@@ -321,6 +345,11 @@ for pkg in "${STOW_PACKAGES[@]}"; do
   log "Stowing (stow-driven conflict backups): $pkg"
   stow_restow_with_backups_on_conflict "$pkg"
 done
+
+# 8) Set fish as the default login shell (so $SHELL and tmux pick it up)
+if ask_yes_no "Set fish as the default login shell?"; then
+  set_default_shell_fish
+fi
 
 log "Done ✅"
 log "Any conflicts were renamed with suffix: .stow-bak-${TS}"
