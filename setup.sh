@@ -10,22 +10,6 @@ BASE_PACKAGES=(
   starship
   tmux
   xcode
-  zsh
-)
-
-OPTIONAL_PACKAGES=(
-  nvim12
-)
-
-# Zsh loader block appended to ~/.zshrc (only once)
-ZSHRC_LOADER_START="# >>> zsh config managed by stow >>>"
-ZSHRC_LOADER_END="# <<< zsh config managed by stow <<<"
-ZSHRC_LOADER_BLOCK=$(
-  cat <<'EOF'
-# >>> zsh config managed by stow >>>
-source "$HOME/.config/zsh/zshrc"
-# <<< zsh config managed by stow <<<
-EOF
 )
 
 # --------- helpers ---------
@@ -39,7 +23,6 @@ Usage: $(basename "$0") [options] [BREWFILE]
 
 Options:
       --install-optional    Automatically answer "yes" to all prompts
-      --skip-optional       Skip all OPTIONAL_PACKAGES without prompting
   -h, --help                Show this help message and exit
 
 Arguments:
@@ -49,8 +32,6 @@ Arguments:
 Examples:
   $(basename "$0")
   $(basename "$0") --yes
-  $(basename "$0") --skip-optional
-  $(basename "$0") -y --skip-optional
   $(basename "$0") ~/Brewfiles/work.Brewfile
   $(basename "$0") -y ~/Brewfiles/work.Brewfile
 EOF
@@ -62,16 +43,12 @@ DEFAULT_BREWFILE="$REPO_DIR/Brewfile"
 BREWFILE="$DEFAULT_BREWFILE"
 
 AUTO_YES=0
-SKIP_OPTIONAL=0
 BREWFILE_ARG=""
 
 for arg in "$@"; do
   case "$arg" in
   --install-optional)
     AUTO_YES=1
-    ;;
-  --skip-optional)
-    SKIP_OPTIONAL=1
     ;;
   -h | --help)
     usage
@@ -134,28 +111,6 @@ ask_yes_no() {
   done
 }
 
-append_zshrc_loader_once() {
-  local zshrc="$HOME/.zshrc"
-
-  # Refuse to edit a symlink (prevents writing into the repo if stow ever linked it)
-  if [[ -L "$zshrc" ]]; then
-    warn "~/.zshrc is a symlink. Refusing to modify it."
-    warn "Remove it or restore a real file, then rerun setup."
-    return 1
-  fi
-
-  # Create ~/.zshrc if missing (as a real file)
-  [[ -e "$zshrc" ]] || : >"$zshrc"
-
-  if grep -qF "$ZSHRC_LOADER_START" "$zshrc"; then
-    log "Zsh loader already present in ~/.zshrc"
-    return 0
-  fi
-
-  log "Appending zsh loader to ~/.zshrc"
-  printf "\n%s\n" "$ZSHRC_LOADER_BLOCK" >>"$zshrc"
-}
-
 ensure_dir() {
   local dir
 
@@ -183,7 +138,7 @@ create_directories() {
 }
 
 # If target exists and isn't the correct stow symlink, rename it in place:
-#   ~/.config/zsh  ->  ~/.config/zsh.stow-bak-YYYYMMDD-HHMMSS (or with -2, -3 if needed)
+#   ~/.config/foo  ->  ~/.config/foo.stow-bak-YYYYMMDD-HHMMSS (or with -2, -3 if needed)
 rename_conflict_in_place() {
   local target="$1"
   local bak="${target}.stow-bak-${TS}"
@@ -308,35 +263,10 @@ fi
 # 4) Ensure ~/.config exists (many packages target it)
 mkdir -p "$HOME/.config"
 
-# 5) Append zsh loader once (so ~/.zshrc loads ~/.config/zsh/zshrc).
-# Fish uses ~/.config/fish/config.fish directly through the stowed fish package.
-append_zshrc_loader_once
-
-# 6) Build package list (optionally include OPTIONAL_PACKAGES)
-STOW_PACKAGES=("${BASE_PACKAGES[@]}")
-
-if [[ "$SKIP_OPTIONAL" -eq 1 ]]; then
-  log "Skipping all optional packages (--skip-optional)."
-else
-  for opt in "${OPTIONAL_PACKAGES[@]}"; do
-    # Only prompt/include optionals that actually exist in the repo
-    if [[ ! -d "$REPO_DIR/$opt" ]]; then
-      warn "Optional package '$opt' not found in repo (skipping)"
-      continue
-    fi
-
-    if ask_yes_no "Stow optional package '$opt'?"; then
-      STOW_PACKAGES+=("$opt")
-    else
-      log "Skipping optional package: $opt"
-    fi
-  done
-fi
-
-# 7) Preflight: rename conflicts, then stow
+# 5) Preflight: rename conflicts, then stow
 cd "$REPO_DIR"
 
-for pkg in "${STOW_PACKAGES[@]}"; do
+for pkg in "${BASE_PACKAGES[@]}"; do
   if [[ ! -d "$REPO_DIR/$pkg" ]]; then
     warn "Skipping '$pkg' (directory not found)"
     continue
@@ -346,7 +276,7 @@ for pkg in "${STOW_PACKAGES[@]}"; do
   stow_restow_with_backups_on_conflict "$pkg"
 done
 
-# 8) Set fish as the default login shell (so $SHELL and tmux pick it up)
+# 6) Set fish as the default login shell (so $SHELL and tmux pick it up)
 if ask_yes_no "Set fish as the default login shell?"; then
   set_default_shell_fish
 fi
