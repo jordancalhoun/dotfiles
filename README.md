@@ -7,6 +7,29 @@
 
 `.tmux.conf` contains general configuration changes.  Any custom files that are machine specific, such as work files that shouldn't be checked into `git` can be stored in the `~/.config/tmux/local/` directory.
 
+# Herdr configuration
+
+The `herdr` Stow package installs `~/.config/herdr/config.toml`. It carries
+over the tmux settings that have direct Herdr equivalents:
+
+- `Ctrl-b` remains the prefix.
+- `prefix+r` reloads the configuration.
+- `prefix+h/j/k/l` focuses adjacent panes.
+- `prefix+%` splits right and `prefix+"` splits down.
+- New panes and tabs inherit the focused pane's working directory.
+- Mouse support, terminal-derived colors, immediate tab creation, and shared
+  pane borders match the tmux behavior as closely as Herdr permits.
+
+Apply changes to a running Herdr server with:
+
+```bash
+herdr config check
+herdr server reload-config
+```
+
+Neovim's direct `Ctrl-h/j/k/l` integration remains configured only for tmux.
+Inside Herdr, use `prefix+h/j/k/l` to move between panes.
+
 # Zsh Configuration Layout
 
 This repository contains a **modular, profile-aware Zsh configuration** designed to be:

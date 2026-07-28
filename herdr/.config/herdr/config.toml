@@ -1,0 +1,34 @@
+onboarding = false
+# Herdr equivalents for the shared tmux configuration.
+
+[theme]
+# Follow the outer terminal's ANSI palette.
+name = "terminal"
+
+[theme.custom]
+panel_bg = "reset"
+
+[terminal]
+# New panes and tabs inherit the focused pane's working directory.
+new_cwd = "follow"
+
+[keys]
+prefix = "ctrl+b"
+reload_config = "prefix+r"
+
+# Keep the tmux pane-navigation mnemonic.
+focus_pane_left = "prefix+h"
+focus_pane_down = "prefix+j"
+focus_pane_up = "prefix+k"
+focus_pane_right = "prefix+l"
+
+# Match tmux's default split keys: % splits right and " splits down.
+split_vertical = "prefix+%"
+split_horizontal = 'prefix+"'
+
+[ui]
+mouse_capture = true
+copy_on_select = true
+prompt_new_tab_name = false
+pane_borders = true
+pane_gaps = true

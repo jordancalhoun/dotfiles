@@ -6,6 +6,7 @@ BASE_PACKAGES=(
   aerospace
   fish
   ghostty
+  herdr
   nvim
   starship
   tmux
@@ -331,7 +332,7 @@ for pkg in "${BASE_PACKAGES[@]}"; do
   stow_restow_with_backups_on_conflict "$pkg"
 done
 
-# 6) Set fish as the default login shell (so $SHELL and tmux pick it up)
+# 6) Set fish as the default login shell (so $SHELL and multiplexers pick it up)
 if ask_yes_no "Set fish as the default login shell?"; then
   set_default_shell_fish
 fi
