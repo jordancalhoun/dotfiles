@@ -1,23 +1,78 @@
+tap "codecarton/tap"
+tap "nikitabobko/tap"
+tap "rjyo/moshi", trusted: true
+# Code searching, linting, rewriting
 brew "ast-grep"
+# User-friendly command-line shell for UNIX-like operating systems
 brew "fish"
+# Command-line fuzzy finder written in Go
 brew "fzf"
+# GitHub command-line tool
 brew "gh"
+# Open source programming language to build simple/reliable/efficient software
+brew "go"
+# Agent multiplexer that lives in your terminal
+brew "herdr"
+# Simple terminal UI for git commands
 brew "lazygit"
-brew "ripgrep"
-brew "starship"
-brew "tmux"
-brew "tree"
+# Package manager for the Lua programming language
+brew "luarocks"
+# Incremental parsing library
 brew "tree-sitter"
-brew "wget"
+# Ambitious Vim-fork focused on extensibility and agility
 brew "neovim"
+# Search tool like grep and The Silver Searcher
+brew "ripgrep"
+# AI coding agent, built for the terminal
+brew "opencode"
+# Fast, disk space efficient package manager
+brew "pnpm"
+# Cross-shell prompt for astronauts
+brew "starship"
+# Organize software neatly under a single directory tree (e.g. /usr/local)
+brew "stow"
+# Terminal multiplexer
+brew "tmux"
+# Display directories as trees (with optional color/HTML output)
+brew "tree"
+# Internet file retriever
+brew "wget"
+# Command-line tool to install and switch between multiple versions of Xcode
+brew "xcodes"
+# Build macOS installer packages from project directories
+brew "codecarton/tap/swiftpkg", trusted: true
+# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
+brew "rjyo/moshi/moshi-hook"
+# Command-line interface for 1Password
+cask "1password-cli"
+# AeroSpace is an i3-like tiling window manager for macOS
+cask "nikitabobko/tap/aerospace", trusted: true
+# OpenAI's official ChatGPT desktop app
 cask "chatgpt"
+# OpenAI's coding agent that runs in your terminal
+cask "codex"
+# Collaborative team software
 cask "figma"
-cask "forklift"
+# Finder replacement and FTP, SFTP, WebDAV and Amazon s3 client
+# License currently expired :(  Enable again  if needing new features
+# Currenlty stuck at 4.5.1
+# cask "forklift"
+# Terminal emulator that uses platform-native UI and GPU acceleration
 cask "ghostty"
+# Knowledge base that works on top of a local folder of plain text Markdown files
 cask "obsidian"
+# System and utility switches
 cask "only-switch"
+# GUI client for PostgreSQL databases
 cask "postico"
+# Control your tools with a few keystrokes
 cask "raycast"
+# Tool that provides consistent, highly configurable symbols for apps
 cask "sf-symbols"
+# Music streaming service
 cask "spotify"
+# Build installer packages with a native interface
+cask "codecarton/tap/swiftpkgr", trusted: true
+# Install and switch between multiple versions of Xcode
 cask "xcodes-app"
+npm "@getpaseo/cli"
