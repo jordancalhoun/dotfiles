@@ -1,5 +1,4 @@
-# Define anything that needs to happen before shared config loads.
-# Set DOTFILES_PROFILE here from ~/.config/fish-local/pre/*.fish when needed.
+# Load machine-specific configuration before local post overrides.
 set -l fish_local_pre "$HOME/.config/fish-local/pre"
 if test -d "$fish_local_pre"
     for f in "$fish_local_pre"/*.fish
@@ -7,13 +6,7 @@ if test -d "$fish_local_pre"
     end
 end
 
-# Shared configuration.
-set -l fish_conf_d "$HOME/.config/fish/conf.d"
-if test -d "$fish_conf_d"
-    for f in "$fish_conf_d"/*.fish
-        test -f "$f"; and source "$f"
-    end
-end
+# Fish automatically loads ~/.config/fish/conf.d/*.fish before config.fish.
 
 # Local post files: overrides, secrets, and machine-specific functions.
 set -l fish_local_post "$HOME/.config/fish-local/post"
