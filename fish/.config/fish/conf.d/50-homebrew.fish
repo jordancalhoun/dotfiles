@@ -1,3 +1,5 @@
+status is-interactive; or return
+
 # Homebrew (macOS; supports Intel + Apple Silicon).
 if test -x /opt/homebrew/bin/brew
     /opt/homebrew/bin/brew shellenv fish | source

@@ -132,31 +132,78 @@ echo "loading: $f"
 
 # Fish Configuration Layout
 
-Fish is configured in parallel with zsh so either shell can be used while migrating.
+Fish uses its native `conf.d` autoloading with a small profile layer and ignored
+machine-local overrides.
 
 ```
-~/.config/fish/config.fish
- ├── ~/.config/fish-local/pre/*.fish
- ├── ~/.config/fish/conf.d/*.fish
- ├── ~/.config/fish/profiles/$DOTFILES_PROFILE/*.fish
- ├── ~/.config/fish/local/profile.fish
- ├── ~/.config/fish/local/secrets.fish
- └── ~/.config/fish-local/post/*.fish
+~/.config/fish/
+├── conf.d/                         # shared configuration, autoloaded by Fish
+│   ├── 00-core.fish
+│   ├── 05-completions.fish
+│   ├── 10-prompt.fish
+│   ├── 30-keybindings.fish
+│   ├── 40-history.fish
+│   ├── 50-homebrew.fish
+│   ├── 60-pnpm.fish
+│   ├── 70-editor-ruby.fish
+│   └── 90-profiles.fish           # loads the active profile
+├── profiles/
+│   ├── personal/                  # personal-only paths and aliases
+│   └── work/                      # work-only paths and aliases
+├── local/                         # gitignored machine overrides and secrets
+└── config.fish                    # loads local/*.fish after conf.d
 ```
 
-Set the active profile from a local pre file:
+## Load Order
+
+Fish automatically loads `conf.d/*.fish` in filename order before
+`config.fish`:
+
+```
+conf.d/*.fish
+ └── 90-profiles.fish
+      └── profiles/$DOTFILES_PROFILE/*.fish
+config.fish
+ └── local/*.fish
+```
+
+Shared configuration belongs in `conf.d`. Personal/work differences belong in
+the corresponding profile directory. Machine-specific settings and secrets
+belong in `local`, which is ignored by Git and loads last so it can override
+shared settings.
+
+## Profiles
+
+Select the active profile persistently with a Fish universal variable:
 
 ```fish
-set -gx DOTFILES_PROFILE work
+set -Ux DOTFILES_PROFILE work
 ```
 
-Fish migration notes:
+Use `personal` to switch back:
 
-- zsh syntax cannot be sourced from fish. Port local `*.zsh` files to `*.fish`.
-- Use `set -gx NAME value` instead of `export NAME=value`.
+```fish
+set -Ux DOTFILES_PROFILE personal
+```
+
+If `DOTFILES_PROFILE` is unset, `personal` is used.
+
+## Extending the Configuration
+
 - Use `fish_add_path` or the provided `path_add` helper instead of editing `PATH` directly.
-- Use `starship init fish | source`, `rbenv init - fish | source`, and `pyenv init - fish | source`.
-- Fish owns completions, history, and autosuggestions; zinit, compinit, zstyle, bindkey, and zsh plugins are intentionally not loaded.
+- Guard interactive-only files with `status is-interactive; or return`.
+- Guard optional tool setup with `command -q tool`.
+- Prefix shared files numerically when their load order matters.
+- Do not manually source `conf.d`; Fish does that automatically.
+
+## Debugging
+
+Inspect startup time and sourced files with:
+
+```fish
+fish --profile-startup /tmp/fish-profile -i -c exit
+sort -nk2 /tmp/fish-profile | tail
+```
 
 After testing `fish`, make it a login shell:
 
