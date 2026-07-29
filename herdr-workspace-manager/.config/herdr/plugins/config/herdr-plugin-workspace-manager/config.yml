@@ -1,5 +1,0 @@
-# yaml-language-server: $schema=https://raw.githubusercontent.com/razajamil/herdr-plugin-workspace-manager/main/schema.json
-
-# Add personal repositories and their layouts here.
-layouts: []
-workspaces: []

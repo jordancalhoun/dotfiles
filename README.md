@@ -60,8 +60,21 @@ Neovim's direct `Ctrl-h/j/k/l` integration remains configured only for tmux.
 Inside Herdr, use `prefix+h/j/k/l` to move between panes.
 
 The setup script installs
-[`herdr-plugin-workspace-manager`](https://github.com/razajamil/herdr-plugin-workspace-manager).
-Its `config.yml` is managed by the `herdr-workspace-manager` Stow package.
+[`herdr-spreader`](https://github.com/yuk1ty/herdr-spreader). Its declarative
+workspace layout is managed by the `herdr-spreader` Stow package. The `stampeed`
+Fish function applies that layout only when its named session is empty, then
+attaches to the session. Subsequent calls attach without creating duplicate
+workspaces. Pass a session name to use a separate named session. Add `--force`
+to stop and delete that session before rebuilding it; without a session name,
+`stampeed --force` rebuilds Herdr's implicit `default` session. Herdr does not
+support deleting that special session, so the forced path stops it and removes
+only its saved `session.json` topology before rebuilding. Run a forced rebuild
+from outside the session being replaced.
+
+`herdr-mini` accepts the same optional session name and `--force` flag. A forced
+remote launch first runs `stampeed SESSION --force --prepare-only` on the mini
+over SSH, waits for that connection to close, then attaches with Herdr's remote
+thin client.
 
 # Fish Configuration Layout
 

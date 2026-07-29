@@ -1,3 +1,3 @@
 function __herdr_default_session
-    echo stampeed
+    echo default
 end

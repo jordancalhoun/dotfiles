@@ -1,0 +1,67 @@
+workspaces:
+  - name: codecarton.com-v2
+    root: ~/Projects/codecarton.com-v2
+    focus: true
+    tabs:
+      - label: code
+        panes:
+          - command: opencode
+            focus: true
+          - command: nvim
+            split: right
+      - label: server
+        panes:
+          - command: pnpm dev
+          - split: down
+            ratio: 0.3
+      - label: git
+        panes:
+          - command: lazygit
+
+  - name: Devote
+    root: ~/Projects/Devote
+    tabs:
+      - label: code
+        panes:
+          - command: opencode
+          - command: nvim
+            split: right
+      - label: git
+        panes:
+          - command: lazygit
+
+  - name: One16
+    root: ~/Projects/One16
+    tabs:
+      - label: code
+        panes:
+          - command: opencode
+          - command: nvim
+            split: right
+      - label: git
+        panes:
+          - command: lazygit
+
+  - name: Ditches
+    root: ~/Projects/Ditches
+    tabs:
+      - label: code
+        panes:
+          - command: opencode
+          - command: nvim
+            split: right
+      - label: git
+        panes:
+          - command: lazygit
+
+  - name: dotfiles
+    root: ~/Projects/dotfiles
+    tabs:
+      - label: code
+        panes:
+          - command: opencode
+          - command: nvim
+            split: right
+      - label: git
+        panes:
+          - command: lazygit

@@ -21,13 +21,42 @@ end
 
 # Start a remote Herdr session on Mac mini.
 function herdr-mini
-    if test (count $argv) -gt 1
-        echo "usage: herdr-mini [session-name]" >&2
+    set -l session_name default
+    set -l session_name_set false
+    set -l force false
+
+    for arg in $argv
+        switch "$arg"
+            case --force
+                if test "$force" = true
+                    echo "usage: herdr-mini [session-name] [--force]" >&2
+                    return 2
+                end
+                set force true
+            case '-*'
+                echo "herdr-mini: unknown option '$arg'" >&2
+                echo "usage: herdr-mini [session-name] [--force]" >&2
+                return 2
+            case '*'
+                if test "$session_name_set" = true
+                    echo "usage: herdr-mini [session-name] [--force]" >&2
+                    return 2
+                end
+                set session_name "$arg"
+                set session_name_set true
+        end
+    end
+
+    if not string match -rq '^[A-Za-z0-9][A-Za-z0-9._-]*$' -- "$session_name"
+        echo "herdr-mini: invalid session name '$session_name'" >&2
         return 2
     end
 
-    set -l session_name stampeed
-    test (count $argv) -eq 1; and set session_name $argv[1]
+    if test "$force" = true
+        set -l stampeed_command "stampeed $session_name --force --prepare-only"
+        set -l remote_command "fish -lc "(string escape -- "$stampeed_command")
+        command ssh mini "$remote_command"; or return
+    end
 
-    herdr --remote ssh://mini --session "$session_name"
+    command herdr --remote ssh://mini --session "$session_name"
 end

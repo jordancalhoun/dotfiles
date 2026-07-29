@@ -82,7 +82,7 @@ configure_gh_auth "$USER_TYPE"
 offer_to_clone_repositories "$USER_TYPE"
 ensure_stow
 mkdir -p "$HOME/.config"
-install_herdr_workspace_manager
+install_herdr_spreader
 stow_dotfiles "$TS"
 
 if [[ "$USER_TYPE" == "user" ]]; then

@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BASE_PACKAGES=(aerospace fish ghostty herdr herdr-workspace-manager lazygit nvim starship tmux xcode)
+BASE_PACKAGES=(aerospace fish ghostty herdr herdr-spreader lazygit nvim starship tmux xcode)
 
 rename_conflict_in_place() {
   local target="$1"
