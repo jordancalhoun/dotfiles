@@ -13,6 +13,8 @@ brew "gh"
 brew "go"
 # Agent multiplexer that lives in your terminal
 brew "herdr"
+# Rust toolchain used to compile Herdr plugins on first use
+brew "rust"
 # Simple terminal UI for git commands
 brew "lazygit"
 # Package manager for the Lua programming language

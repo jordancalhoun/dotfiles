@@ -13,6 +13,10 @@ BASE_PACKAGES=(
   xcode
 )
 
+PERSONAL_PACKAGES=(
+  herdr-workspace-manager
+)
+
 # --------- helpers ---------
 log() { printf "\033[1;32m%s\033[0m\n" "$*"; }
 warn() { printf "\033[1;33m%s\033[0m\n" "$*"; }
@@ -20,9 +24,10 @@ err() { printf "\033[1;31m%s\033[0m\n" "$*"; }
 
 usage() {
   cat <<EOF
-Usage: $(basename "$0") [options] [BREWFILE]
+Usage: $(basename "$0") --profile personal|work [options] [BREWFILE]
 
 Options:
+      --profile PROFILE     Required machine profile: personal or work
       --install-optional    Automatically answer "yes" to all prompts
   -h, --help                Show this help message and exit
 
@@ -31,10 +36,10 @@ Arguments:
                          Defaults to: $REPO_DIR/Brewfile
 
 Examples:
-  $(basename "$0")
-  $(basename "$0") --yes
-  $(basename "$0") ~/Brewfiles/work.Brewfile
-  $(basename "$0") -y ~/Brewfiles/work.Brewfile
+  $(basename "$0") --profile personal
+  $(basename "$0") --profile work
+  $(basename "$0") --profile work ~/Brewfiles/work.Brewfile
+  $(basename "$0") --profile=personal --install-optional
 EOF
 }
 
@@ -45,11 +50,26 @@ BREWFILE="$DEFAULT_BREWFILE"
 
 AUTO_YES=0
 BREWFILE_ARG=""
+PROFILE=""
 
-for arg in "$@"; do
-  case "$arg" in
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+  --profile)
+    if [[ $# -lt 2 ]]; then
+      err "--profile requires personal or work"
+      usage
+      exit 1
+    fi
+    PROFILE="$2"
+    shift 2
+    ;;
+  --profile=*)
+    PROFILE="${1#*=}"
+    shift
+    ;;
   --install-optional)
     AUTO_YES=1
+    shift
     ;;
   -h | --help)
     usage
@@ -57,9 +77,10 @@ for arg in "$@"; do
     ;;
   *)
     if [[ -z "$BREWFILE_ARG" ]]; then
-      BREWFILE_ARG="$arg"
+      BREWFILE_ARG="$1"
+      shift
     else
-      err "Unexpected argument: $arg"
+      err "Unexpected argument: $1"
       usage
       exit 1
     fi
@@ -67,14 +88,19 @@ for arg in "$@"; do
   esac
 done
 
-if [[ -n "$BREWFILE_ARG" ]]; then
-  if [[ -f "$BREWFILE_ARG" ]]; then
-    BREWFILE="$(cd "$(dirname "$BREWFILE_ARG")" && pwd)/$(basename "$BREWFILE_ARG")"
-  else
-    err "Provided Brewfile path does not exist: $BREWFILE_ARG"
-    exit 1
-  fi
-fi
+case "$PROFILE" in
+personal | work) ;;
+"")
+  err "A profile is required. Pass --profile personal or --profile work."
+  usage
+  exit 1
+  ;;
+*)
+  err "Invalid profile '$PROFILE'. Expected personal or work."
+  usage
+  exit 1
+  ;;
+esac
 
 if [[ -n "$BREWFILE_ARG" ]]; then
   if [[ -f "$BREWFILE_ARG" ]]; then
@@ -289,8 +315,37 @@ set_default_shell_fish() {
   fi
 }
 
+set_fish_profile() {
+  local fish_bin=""
+
+  if command -v fish >/dev/null 2>&1; then
+    fish_bin="$(command -v fish)"
+  elif [[ -x /opt/homebrew/bin/fish ]]; then
+    fish_bin="/opt/homebrew/bin/fish"
+  elif [[ -x /usr/local/bin/fish ]]; then
+    fish_bin="/usr/local/bin/fish"
+  else
+    err "fish is unavailable after brew bundle; cannot persist the profile."
+    return 1
+  fi
+
+  "$fish_bin" -c "set -Ux DOTFILES_PROFILE $PROFILE"
+  log "Fish profile set to: $PROFILE"
+}
+
+install_herdr_workspace_manager() {
+  if ! command -v herdr >/dev/null 2>&1; then
+    err "herdr is unavailable after brew bundle; cannot install workspace manager."
+    return 1
+  fi
+
+  log "Installing/updating Herdr workspace manager plugin"
+  herdr plugin install razajamil/herdr-plugin-workspace-manager --yes
+}
+
 # --------- main ---------
 log "Repo: $REPO_DIR"
+log "Profile: $PROFILE"
 
 # 1) Homebrew
 if ! command -v brew >/dev/null 2>&1; then
@@ -319,7 +374,13 @@ fi
 # 4) Ensure ~/.config exists (many packages target it)
 mkdir -p "$HOME/.config"
 
-# 5) Preflight: rename conflicts, then stow
+# 5) Persist the same profile Fish will load on future shells
+set_fish_profile
+
+# 6) Install the Herdr workspace manager plugin
+install_herdr_workspace_manager
+
+# 7) Preflight: rename conflicts, then stow
 cd "$REPO_DIR"
 
 for pkg in "${BASE_PACKAGES[@]}"; do
@@ -332,12 +393,24 @@ for pkg in "${BASE_PACKAGES[@]}"; do
   stow_restow_with_backups_on_conflict "$pkg"
 done
 
-# 6) Set fish as the default login shell (so $SHELL and multiplexers pick it up)
+if [[ "$PROFILE" == "personal" ]]; then
+  for pkg in "${PERSONAL_PACKAGES[@]}"; do
+    log "Stowing personal package: $pkg"
+    stow_restow_with_backups_on_conflict "$pkg"
+  done
+else
+  for pkg in "${PERSONAL_PACKAGES[@]}"; do
+    log "Removing personal package links for work profile: $pkg"
+    stow -D -v -d "$REPO_DIR" -t "$HOME" "$pkg"
+  done
+fi
+
+# 8) Set fish as the default login shell (so $SHELL and multiplexers pick it up)
 if ask_yes_no "Set fish as the default login shell?"; then
   set_default_shell_fish
 fi
 
-# 7) Link skills into claude/codex/opencode if those tools are present
+# 9) Link skills into claude/codex/opencode if those tools are present
 link_skills_to_tools
 
 log "Done ✅"
