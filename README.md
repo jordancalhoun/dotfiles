@@ -1,7 +1,36 @@
 # Getting Started
-- [ ] Clone repository
-- [ ] Run `./setup.sh --profile personal` or `./setup.sh --profile work`
+- [ ] Run the bootstrap command on a new machine:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/jordancalhoun/dotfiles/main/bootstrap.sh | bash
+```
+
+The bootstrap script only creates `~/Projects`, clones this repository into
+`~/Projects/dotfiles`, and starts `setup.sh`. The first setup prompt asks whether
+the machine user type is `user` or `agent`.
+
+- [ ] Choose browser/device or fine-grained-token GitHub authentication
 - [ ] Configure `local` specific files (if needed)
+
+Setup skips the GitHub prompt when `gh` is already authenticated. GitHub CLI
+stores credentials in the system credential store when available and warns if
+it must fall back to plaintext storage. Browser/device authentication is the
+recommended choice for personal machines that access multiple organizations.
+Fine-grained tokens are useful for restricted agent machines, but each token can
+access resources owned by only one user or organization. Choosing fine-grained
+token authentication skips the 1Password SSH setup for that setup run. Agent
+machines always skip the 1Password SSH setup.
+
+After GitHub authentication, setup offers to clone the repositories configured
+for the selected user type in `scripts/repositories.sh`. Add repositories as
+`OWNER/REPO` entries to `SHARED_REPOSITORIES`, `AGENT_REPOSITORIES`, or
+`USER_REPOSITORIES`. Shared repositories are cloned for both user types. Setup
+clones them into `~/Projects` and skips existing destinations.
+
+On browser-authenticated personal machines, setup can configure Fish to use SSH
+keys from the 1Password desktop app. It opens 1Password and pauses while you sign
+in, then asks you to enable **Settings > Developer > Use the SSH Agent**. The
+generated `local/10-1password-ssh-agent.fish` file is ignored by Git.
 
 # tmux configuration
 
@@ -9,8 +38,8 @@
 
 # Herdr configuration
 
-The `herdr` Stow package installs `~/.config/herdr/config.toml` for both
-profiles. It carries over the tmux settings that have direct Herdr equivalents:
+The `herdr` Stow package installs `~/.config/herdr/config.toml`. It carries over
+the tmux settings that have direct Herdr equivalents:
 
 - `Ctrl-b` remains the prefix.
 - `prefix+r` reloads the configuration.
@@ -32,20 +61,11 @@ Inside Herdr, use `prefix+h/j/k/l` to move between panes.
 
 The setup script installs
 [`herdr-plugin-workspace-manager`](https://github.com/razajamil/herdr-plugin-workspace-manager).
-The plugin is installed for both profiles. Its `config.yml` is managed by the
-`herdr-workspace-manager` Stow package and is linked only for the `personal`
-profile. Running setup with `--profile work` removes the workspace-manager
-configuration link left by an earlier personal setup while preserving Herdr's
-shared `config.toml`.
-
-The required `--profile personal|work` argument is also persisted as Fish's
-universal `DOTFILES_PROFILE` variable, keeping Stow selection and shell profile
-selection in sync.
+Its `config.yml` is managed by the `herdr-workspace-manager` Stow package.
 
 # Fish Configuration Layout
 
-Fish uses its native `conf.d` autoloading with a small profile layer and ignored
-machine-local overrides.
+Fish uses its native `conf.d` autoloading with ignored machine-local overrides.
 
 ```
 ~/.config/fish/
@@ -54,14 +74,9 @@ machine-local overrides.
 │   ├── 05-completions.fish
 │   ├── 10-prompt.fish
 │   ├── 30-keybindings.fish
-│   ├── 40-history.fish
 │   ├── 50-homebrew.fish
 │   ├── 60-pnpm.fish
-│   ├── 70-editor-ruby.fish
-│   └── 90-profiles.fish           # loads the active profile
-├── profiles/
-│   ├── personal/                  # personal-only paths and aliases
-│   └── work/                      # work-only paths and aliases
+│   └── 70-editor-ruby.fish
 ├── local/                         # gitignored machine overrides and secrets
 └── config.fish                    # loads local/*.fish after conf.d
 ```
@@ -73,32 +88,13 @@ Fish automatically loads `conf.d/*.fish` in filename order before
 
 ```
 conf.d/*.fish
- └── 90-profiles.fish
-      └── profiles/$DOTFILES_PROFILE/*.fish
 config.fish
  └── local/*.fish
 ```
 
-Shared configuration belongs in `conf.d`. Personal/work differences belong in
-the corresponding profile directory. Machine-specific settings and secrets
+Shared configuration belongs in `conf.d`. Machine-specific settings and secrets
 belong in `local`, which is ignored by Git and loads last so it can override
 shared settings.
-
-## Profiles
-
-Select the active profile persistently with a Fish universal variable:
-
-```fish
-set -Ux DOTFILES_PROFILE work
-```
-
-Use `personal` to switch back:
-
-```fish
-set -Ux DOTFILES_PROFILE personal
-```
-
-If `DOTFILES_PROFILE` is unset, `personal` is used.
 
 ## Extending the Configuration
 

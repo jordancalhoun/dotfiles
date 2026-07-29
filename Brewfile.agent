@@ -47,6 +47,8 @@ brew "codecarton/tap/swiftpkg", trusted: true
 brew "rjyo/moshi/moshi-hook"
 # Command-line interface for 1Password
 cask "1password-cli"
+# Password manager and SSH agent
+cask "1password"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace", trusted: true
 # OpenAI's official ChatGPT desktop app
