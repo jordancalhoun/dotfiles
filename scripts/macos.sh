@@ -1,23 +1,12 @@
 #!/usr/bin/env bash
 
 install_herdr_spreader() {
-  local legacy_config="$HOME/.config/herdr/plugins/config/herdr-plugin-workspace-manager/config.yml"
-
   if ! command -v herdr >/dev/null 2>&1; then
     err "herdr is unavailable after brew bundle; cannot install Spreader."
     return 1
   fi
   log "Installing/updating Herdr Spreader plugin"
   herdr plugin install yuk1ty/herdr-spreader --yes
-
-  if herdr plugin list --plugin herdr-plugin-workspace-manager --json >/dev/null 2>&1; then
-    log "Removing replaced Herdr workspace manager plugin"
-    herdr plugin uninstall herdr-plugin-workspace-manager
-  fi
-  if [[ -L "$legacy_config" ]] && [[ "$(readlink "$legacy_config")" == *herdr-workspace-manager/* ]]; then
-    unlink "$legacy_config"
-    log "Removed obsolete workspace manager config link"
-  fi
 }
 
 configure_1password_ssh() {
