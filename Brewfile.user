@@ -1,6 +1,5 @@
 tap "codecarton/tap"
 tap "nikitabobko/tap"
-tap "rjyo/moshi", trusted: true
 # Code searching, linting, rewriting
 brew "ast-grep"
 # User-friendly command-line shell for UNIX-like operating systems
@@ -43,8 +42,6 @@ brew "wget"
 brew "xcodes"
 # Build macOS installer packages from project directories
 brew "codecarton/tap/swiftpkg", trusted: true
-# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
-brew "rjyo/moshi/moshi-hook"
 # Command-line interface for 1Password
 cask "1password-cli"
 # Password manager and SSH agent
