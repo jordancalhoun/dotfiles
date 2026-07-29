@@ -1,0 +1,15 @@
+# LazyGit user configuration.
+# Machine-local state.yml remains outside this Stow package.
+
+gui:
+  showIcons: true
+  nerdFontsVersion: "3"
+  timeFormat: "02 Jan 2006"
+
+git:
+  disableForcePushing: true
+  branchPrefix: "jordancalhoun/"
+
+# LazyGit is installed and updated through Homebrew.
+update:
+  method: never

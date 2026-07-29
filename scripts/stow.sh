@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-BASE_PACKAGES=(aerospace fish ghostty herdr herdr-workspace-manager nvim starship tmux xcode)
+BASE_PACKAGES=(aerospace fish ghostty herdr herdr-workspace-manager lazygit nvim starship tmux xcode)
 
 rename_conflict_in_place() {
   local target="$1"
@@ -20,7 +20,7 @@ rename_conflict_in_place() {
 stow_conflict_paths_from_output() {
   sed -nE \
     -e 's/^[[:space:]]*\*[[:space:]]+existing target .*: (.*)$/\1/p' \
-    -e 's/^[[:space:]]*\*[[:space:]]+cannot stow .* over existing target ([^ ]+) since .*$/\1/p'
+    -e 's/^[[:space:]]*\*[[:space:]]+cannot stow .* over existing target (.*) since .*$/\1/p'
 }
 
 stow_restow_with_backups_on_conflict() {
