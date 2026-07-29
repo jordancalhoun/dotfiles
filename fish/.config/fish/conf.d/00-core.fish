@@ -21,5 +21,13 @@ end
 
 # Start a remote Herdr session on Mac mini.
 function herdr-mini
-    herdr --remote ssh://mini
+    if test (count $argv) -gt 1
+        echo "usage: herdr-mini [session-name]" >&2
+        return 2
+    end
+
+    set -l session_name stampeed
+    test (count $argv) -eq 1; and set session_name $argv[1]
+
+    herdr --remote ssh://mini --session "$session_name"
 end
