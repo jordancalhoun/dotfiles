@@ -34,8 +34,59 @@ function __herdr_apply_spreader --argument-names session_name
         return 1
     end
 
-    command herdr --session "$session_name" plugin action invoke herdr-spreader.apply
+    # Invoking an action only queues it; a zero exit status does not mean the
+    # plugin command has finished. Wait for this invocation's log before using
+    # or removing the workspace that supplied its invocation context.
+    set -l apply_json (command herdr --session "$session_name" plugin action invoke herdr-spreader.apply)
     set -l apply_status $status
+    set -l apply_log_id
+
+    if test $apply_status -eq 0
+        set apply_log_id (string join \n -- $apply_json | jq -r '.result.log.log_id // empty')
+        if test -z "$apply_log_id"
+            echo "herdr: Spreader invocation did not return a log ID" >&2
+            set apply_status 1
+        end
+    end
+
+    if test $apply_status -eq 0
+        set -l apply_state running
+        set -l apply_log
+
+        for attempt in (seq 1 300)
+            set -l logs_json (command herdr --session "$session_name" plugin log list \
+                --plugin herdr-spreader \
+                --limit 10)
+            set -l logs_status $status
+            if test $logs_status -ne 0
+                set apply_status $logs_status
+                break
+            end
+
+            set apply_log (string join \n -- $logs_json | jq -c \
+                --arg log_id "$apply_log_id" \
+                '.result.logs[] | select(.log_id == $log_id)' | head -n 1)
+            if test -n "$apply_log"
+                set apply_state (string join \n -- $apply_log | jq -r '.status')
+                test "$apply_state" != running; and break
+            end
+            sleep 0.1
+        end
+
+        if test $apply_status -eq 0
+            switch "$apply_state"
+                case succeeded
+                case running
+                    echo "herdr: timed out waiting for Spreader" >&2
+                    set apply_status 1
+                case '*'
+                    set -l apply_stderr (string join \n -- $apply_log | jq -r '.stderr // empty')
+                    test -n "$apply_stderr"; and echo "$apply_stderr" >&2
+                    set apply_status (string join \n -- $apply_log | jq -r '.exit_code // 1')
+                    test "$apply_status" -eq 0; and set apply_status 1
+            end
+        end
+    end
 
     command herdr --session "$session_name" workspace close "$bootstrap_id" >/dev/null
     set -l cleanup_status $status
