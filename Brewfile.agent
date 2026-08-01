@@ -51,6 +51,8 @@ cask "nikitabobko/tap/aerospace", trusted: true
 cask "chatgpt"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
+# AI-powered web browser
+cask "thebrowsercompany-dia"
 # Collaborative team software
 cask "figma"
 # Finder replacement and FTP, SFTP, WebDAV and Amazon s3 client
