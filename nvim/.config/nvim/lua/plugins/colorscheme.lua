@@ -1,19 +1,14 @@
 return {
   {
-    "datsfilipe/vesper.nvim",
+    "webhooked/kanso.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      require("vesper").setup({
+      require("kanso").setup({
         transparent = true,
-        overrides = {
-          SnacksNormal = { link = "Normal" },
-          SnacksNormalNC = { link = "Normal" },
-          SnacksPicker = { link = "Normal" },
-          SnacksPickerList = { link = "Normal" },
-          SnacksPickerInput = { link = "Normal" },
-          SnacksPickerBox = { link = "Normal" },
-          SnacksPickerPreview = { link = "Normal" },
+        background = {
+          dark = "ink",
+          light = "pearl",
         },
       })
     end,
@@ -21,7 +16,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "vesper",
+      colorscheme = "kanso-ink",
     },
   },
 }

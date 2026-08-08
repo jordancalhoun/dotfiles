@@ -7,9 +7,9 @@ name = "terminal"
 
 [theme.custom]
 panel_bg = "reset"
-surface_dim = "#232323"
-surface0 = "#343434"
-text = "#cccccc"
+surface_dim = "#1f1f26"
+surface0 = "#22262d"
+text = "#c5c9c7"
 
 [terminal]
 # New panes and tabs inherit the focused pane's working directory.

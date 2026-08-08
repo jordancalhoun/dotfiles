@@ -1,6 +1,6 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
-palette = "vesper"
+palette = "kanso_ink"
 
 format = """
 $username\
@@ -51,11 +51,11 @@ style = "muted"
 detect_extensions = []
 detect_files = []
 
-[palettes.vesper]
-red = "#f5a191"
-green = "#90b99f"
-gold = "#e6b99d"
-blue = "#aca1cf"
-purple = "#e29eca"
-cyan = "#ea83a5"
-muted = "#7e7e7e"
+[palettes.kanso_ink]
+red = "#e46876"
+green = "#87a987"
+gold = "#e6c384"
+blue = "#7fb4ca"
+purple = "#938aa9"
+cyan = "#7aa89f"
+muted = "#717c7c"
