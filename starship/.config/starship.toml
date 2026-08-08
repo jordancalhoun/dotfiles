@@ -1,5 +1,7 @@
 "$schema" = 'https://starship.rs/config-schema.json'
 
+palette = "vesper"
+
 format = """
 $username\
 $hostname\
@@ -22,10 +24,10 @@ vimcmd_symbol = "[❮](green)"
 
 [git_branch]
 format = "[$branch]($style)"
-style = "bright-black"
+style = "muted"
 
 [git_status]
-format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](218) ($ahead_behind$stashed)]($style)"
+format = "[[(*$conflicted$untracked$modified$staged$renamed$deleted)](purple) ($ahead_behind$stashed)]($style)"
 style = "cyan"
 conflicted = "​"
 untracked = "​"
@@ -37,14 +39,23 @@ stashed = "≡"
 
 [git_state]
 format = '\([$state( $progress_current/$progress_total)]($style)\) '
-style = "bright-black"
+style = "muted"
 
 [cmd_duration]
 format = "[$duration]($style) "
-style = "yellow"
+style = "gold"
 
 [python]
 format = "[$virtualenv]($style) "
-style = "bright-black"
+style = "muted"
 detect_extensions = []
 detect_files = []
+
+[palettes.vesper]
+red = "#f5a191"
+green = "#90b99f"
+gold = "#e6b99d"
+blue = "#aca1cf"
+purple = "#e29eca"
+cyan = "#ea83a5"
+muted = "#7e7e7e"

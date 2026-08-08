@@ -1,13 +1,19 @@
 return {
   {
-    "vague-theme/vague.nvim",
+    "datsfilipe/vesper.nvim",
     lazy = false,
     priority = 1000,
     config = function()
-      require("vague").setup({
+      require("vesper").setup({
         transparent = true,
-        style = {
-          comments = "italic",
+        overrides = {
+          SnacksNormal = { link = "Normal" },
+          SnacksNormalNC = { link = "Normal" },
+          SnacksPicker = { link = "Normal" },
+          SnacksPickerList = { link = "Normal" },
+          SnacksPickerInput = { link = "Normal" },
+          SnacksPickerBox = { link = "Normal" },
+          SnacksPickerPreview = { link = "Normal" },
         },
       })
     end,
@@ -15,7 +21,7 @@ return {
   {
     "LazyVim/LazyVim",
     opts = {
-      colorscheme = "vague",
+      colorscheme = "vesper",
     },
   },
 }
