@@ -5,6 +5,7 @@ onboarding = false
 # Follow the outer terminal's ANSI palette.
 name = "terminal"
 
+auto_switch = false
 [theme.custom]
 panel_bg = "reset"
 surface_dim = "#1f1f26"
@@ -35,3 +36,4 @@ copy_on_select = true
 prompt_new_tab_name = false
 pane_borders = true
 pane_gaps = true
+show_agent_labels_on_pane_borders = true
