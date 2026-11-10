@@ -10,6 +10,9 @@ end
 
 status is-interactive; or return
 
+alias cy='codex --yolo'
+alias cx='claude --dangerously-skip-permissions'
+
 # User-installed command-line tools.
 path_add "$HOME/.opencode/bin"
 path_add "$HOME/.local/bin"
