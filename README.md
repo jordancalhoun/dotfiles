@@ -76,6 +76,21 @@ remote launch first runs `stampeed SESSION --force --prepare-only` on the mini
 over SSH, waits for that connection to close, then attaches with Herdr's remote
 thin client.
 
+# Claude Code status line
+
+The `claude` Stow package installs `~/.claude/statusline.sh`. It shows the model
+and effort level, directory, Git branch, context use, lines changed and session
+cost, with bars for the 5-hour and weekly usage limits on a second line. It
+needs `jq`, which macOS includes.
+
+Claude Code rewrites `~/.claude/settings.json` itself, so that file isn't
+stowed. Setup instead merges the `statusLine` entry into it and keeps every
+other setting. Setup also creates `~/.claude` before stowing so Stow links only
+the script and not the whole directory.
+
+Edits to the script in this repository take effect at the next status line
+refresh.
+
 # Fish Configuration Layout
 
 Fish uses its native `conf.d` autoloading with ignored machine-local overrides.

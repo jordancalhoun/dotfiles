@@ -17,6 +17,8 @@ source "$REPO_DIR/scripts/stow.sh"
 source "$REPO_DIR/scripts/macos.sh"
 # shellcheck source=scripts/skills.sh
 source "$REPO_DIR/scripts/skills.sh"
+# shellcheck source=scripts/claude.sh
+source "$REPO_DIR/scripts/claude.sh"
 
 usage() {
   cat <<EOF
@@ -82,8 +84,12 @@ configure_gh_auth "$USER_TYPE"
 offer_to_clone_repositories "$USER_TYPE"
 ensure_stow
 mkdir -p "$HOME/.config"
+# Without this, Stow would link all of ~/.claude into the repo, and Claude
+# Code's history and sessions would be written there.
+mkdir -p "$HOME/.claude"
 install_herdr_spreader
 stow_dotfiles "$TS"
+configure_claude_statusline
 
 if [[ "$USER_TYPE" == "user" ]]; then
   configure_1password_ssh
