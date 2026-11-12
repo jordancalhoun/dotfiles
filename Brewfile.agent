@@ -1,6 +1,5 @@
 tap "codecarton/tap"
 tap "nikitabobko/tap"
-tap "rjyo/moshi", trusted: true
 # Code searching, linting, rewriting
 brew "ast-grep"
 # User-friendly command-line shell for UNIX-like operating systems
@@ -43,12 +42,8 @@ brew "wget"
 brew "xcodes"
 # Build macOS installer packages from project directories
 brew "codecarton/tap/swiftpkg", trusted: true
-# Portable daemon + CLI that bridges AI coding agents to the Moshi mobile app
-brew "rjyo/moshi/moshi-hook"
 # AeroSpace is an i3-like tiling window manager for macOS
 cask "nikitabobko/tap/aerospace", trusted: true
-# OpenAI's official ChatGPT desktop app
-cask "chatgpt"
 # OpenAI's coding agent that runs in your terminal
 cask "codex"
 # AI-powered web browser
